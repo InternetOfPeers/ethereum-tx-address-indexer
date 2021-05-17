@@ -9,16 +9,18 @@ module.exports = {
     exec_mode: "fork",
     args: [
       "0",
-      "4805355",
+      "1000000",
       "500"
     ],
     env: {
-      "JSONRPC_URL": "https://mainnet.infura.io/v3/7c5f3fc0248844869d448e51394ce26e",
-      "NODE_ENV": "development"
+      "NODE_ENV": "development",
+      "JSONRPC_URL": "https://mainnet.infura.io/v3/<YOUR-PROJECT-ID>",
+      "IPC_PATH": "/"
     },
     env_production: {
-      "JSONRPC_URL": "http://127.0.0.1:8545",
       "NODE_ENV": "production",
+      "JSONRPC_URL": "http://127.0.0.1:8545",
+      "IPC_PATH": "/home/developer/.ethereum/goerli/geth.ipc"
     }
   }]
 };
