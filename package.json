@@ -1,0 +1,19 @@
+{
+  "name": "tx-address-indexer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node -r dotenv/config index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@pm2/io": "^5.0.0",
+    "ethers": "^5.1.4"
+  },
+  "devDependencies": {
+    "dotenv": "^9.0.2"
+  }
+}
