@@ -8,9 +8,9 @@ module.exports = {
       node_args: [],
       exec_mode: "fork",
       args: [
-        "4000000",
-        "4000999",
-        "500"
+        "0",
+        "1000000",
+        "10000"
       ],
       env: {
         "NODE_ENV": "development",
