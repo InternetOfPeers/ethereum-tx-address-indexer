@@ -5,8 +5,8 @@ const fs = require('fs');
 // External parameters
 const JSONRPC_URL = process.env.JSONRPC_URL;
 const IPC_PATH = process.env.IPC_PATH;
-const BLOCKS_DATA_DIR = "./blocks-data"
-const INDEX_DATA_DIR = "./index-data"
+
+const BLOCKS_DATA_DIR = "./blocks-data";
 
 const ARGV = process.argv.slice(2);
 const FROM_BLOCK = parseInt(ARGV[0]);
@@ -33,17 +33,21 @@ var blocksSpeed = io.meter({
 });
 
 // Let's go
-console.log("====== INDEXING STARTED =======")
-console.log("= Parameters:")
-console.log("= FROM_BLOCK", FROM_BLOCK)
-console.log("= TO_BLOCK", TO_BLOCK)
-console.log("= BATCH_SIZE", BATCH_SIZE)
-console.log("= JSONRPC_URL", JSONRPC_URL)
-console.log("= IPC_PATH", IPC_PATH)
-console.log("===============================")
+console.log("> DATA EXTRACTION STARTED ======================================")
+console.log("> FROM_BLOCK  :", FROM_BLOCK)
+console.log("> TO_BLOCK    :", TO_BLOCK)
+console.log("> BATCH_SIZE  :", BATCH_SIZE)
+console.log("> JSONRPC_URL :", JSONRPC_URL)
+console.log("> IPC_PATH    :", IPC_PATH)
+console.log("> ==============================================================")
 
-//const provider = new ethers.providers.JsonRpcProvider(JSONRPC_URL);
-const provider = new ethers.providers.IpcProvider(IPC_PATH);
+// Prefer IPC over JSON RPC
+let provider;
+if (IPC_PATH != undefined && IPC_PATH != "") {
+    provider = new ethers.providers.IpcProvider(IPC_PATH);
+} else {
+    provider = new ethers.providers.JsonRpcProvider(JSONRPC_URL);
+}
 
 async function getTransactionsByBlock(blockIdentifier) {
     return await provider.getBlockWithTransactions(blockIdentifier).then(result => result.transactions);
@@ -53,7 +57,6 @@ async function getIndexDataByBlock(blockIdentifier) {
     currentBlockNumber.set(blockIdentifier);
     let result = [];
     (await getTransactionsByBlock(blockIdentifier)).forEach(function (tx) {
-        console.log(tx);
         result.push([tx.from, tx.nonce, tx.hash, tx.to, blockIdentifier]);
     })
     blocksSpeed.mark();
@@ -84,6 +87,7 @@ async function writeTxData(data, fromBlock, toBlock) {
         ...
 
     Notes:
+        - data are already ordered by nonce because otherwise the block is not valid
         - `to-address` can be void if the tx is a transaction to deploy a smart contract
         - from-address can (and it will) be duplicated inside the same file. The unique key is `from-address`+`nonce`
     */
@@ -139,18 +143,8 @@ async function writeIndexDataByRangeWithBatch(blockNumberFrom, blockNumberTo, bl
             }
         }
     }
-    console.log("====== INDEXING FINISHED ======")
+    console.log("> DATA EXTRACTION FINISHED =====================================")
 }
 
-// Write TX data in flat files
+// Write TX data to flat files
 writeIndexDataByRangeWithBatch(FROM_BLOCK, TO_BLOCK, BATCH_SIZE)
-
-// Create the index files
-
-// TODO Read all .csv in blocks-data
-/* TODO For every file:
-      -- read all lines
-      -- for each address create an array entry with nonce as key
-      -- merge 
-
-*/

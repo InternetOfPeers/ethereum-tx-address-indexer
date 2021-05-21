@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@pm2/io": "^5.0.0",
+    "chokidar": "^3.5.1",
     "ethers": "^5.1.4"
   },
   "devDependencies": {

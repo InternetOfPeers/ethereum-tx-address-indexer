@@ -1,6 +1,6 @@
 module.exports = {
   apps: [{
-      name: "data-extractor",
+      name: "extract-data",
       script: "./src/data-extractor.js",
       cwd: ".",
       watch: false,
@@ -9,13 +9,13 @@ module.exports = {
       exec_mode: "fork",
       args: [
         "4000000",
-        "4000000",
+        "4000999",
         "500"
       ],
       env: {
         "NODE_ENV": "development",
         "JSONRPC_URL": "https://mainnet.infura.io/v3/<YOUR-PROJECT-ID>",
-        "IPC_PATH": "/"
+        "IPC_PATH": "/home/developer/.ethereum/goerli/geth.ipc"
       },
       env_production: {
         "NODE_ENV": "production",
@@ -24,7 +24,7 @@ module.exports = {
       }
     },
     {
-      name: "index-creator",
+      name: "create-index",
       script: "./src/index-creator.js",
       cwd: ".",
       watch: false,

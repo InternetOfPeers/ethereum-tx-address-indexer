@@ -25,3 +25,8 @@ Please update variables inside `.env` accordingly if you are using `npm start` o
 Use `pm2 start --env production` to use the production's settings.
 
 You can use Infura as JSONRPC_URL, but I suggest a local node for performance and security.
+
+
+## TEMP
+
+`pm2 start --only extract-data`
