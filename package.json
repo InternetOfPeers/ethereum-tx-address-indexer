@@ -1,10 +1,11 @@
 {
-  "name": "tx-address-indexer",
+  "name": "ethereum-tx-address-indexer",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node -r dotenv/config index.js",
+    "extract-data": "node -r dotenv/config src/data-extractor.js",
+    "create-index": "node -r dotenv/config src/index-creator.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

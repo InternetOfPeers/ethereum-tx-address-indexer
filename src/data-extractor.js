@@ -53,6 +53,7 @@ async function getIndexDataByBlock(blockIdentifier) {
     currentBlockNumber.set(blockIdentifier);
     let result = [];
     (await getTransactionsByBlock(blockIdentifier)).forEach(function (tx) {
+        console.log(tx);
         result.push([tx.from, tx.nonce, tx.hash, tx.to, blockIdentifier]);
     })
     blocksSpeed.mark();
@@ -68,7 +69,7 @@ async function getIndexDataByRange(blockNumberFrom, blockNumberTo) {
     return result;
 }
 
-async function writeData(data, fromBlock, toBlock) {
+async function writeTxData(data, fromBlock, toBlock) {
     /*
     File data structure:
 
@@ -122,7 +123,7 @@ async function writeIndexDataByRangeWithBatch(blockNumberFrom, blockNumberTo, bl
         if (blockNumberFrom + blocksBatch > blockNumberTo) {
             console.log("> Writing a single batch of", blockNumberTo - blockNumberFrom + 1, "blocks. Please wait.")
             await getIndexDataByRange(blockNumberFrom, blockNumberTo).then(function (data) {
-                writeData(data, blockNumberFrom, blockNumberTo);
+                writeTxData(data, blockNumberFrom, blockNumberTo);
             });
         } else {
             console.log("> Writing batches of", blocksBatch, "blocks. Please wait.")
@@ -132,7 +133,7 @@ async function writeIndexDataByRangeWithBatch(blockNumberFrom, blockNumberTo, bl
                 let to = current + blocksBatch - 1;
                 if (to > blockNumberTo) to = blockNumberTo;
                 await getIndexDataByRange(current, to).then(async function (data) {
-                    await writeData(data, current, to);
+                    await writeTxData(data, current, to);
                 });
                 current = to + 1;
             }
@@ -141,4 +142,15 @@ async function writeIndexDataByRangeWithBatch(blockNumberFrom, blockNumberTo, bl
     console.log("====== INDEXING FINISHED ======")
 }
 
+// Write TX data in flat files
 writeIndexDataByRangeWithBatch(FROM_BLOCK, TO_BLOCK, BATCH_SIZE)
+
+// Create the index files
+
+// TODO Read all .csv in blocks-data
+/* TODO For every file:
+      -- read all lines
+      -- for each address create an array entry with nonce as key
+      -- merge 
+
+*/
